@@ -25,12 +25,14 @@
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
         记住我
       </el-checkbox>
+
       <el-form-item style="width:100%;">
         <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
       </el-form-item>
+
     </el-form>
     <!--  底部  -->
     <div v-if="$store.state.settings.showFooter" id="el-login-footer">
@@ -113,23 +115,33 @@ export default {
           username: this.loginForm.username,
           password: this.loginForm.password,
           rememberMe: this.loginForm.rememberMe,
+          // code 是验证码的输入
+          // 这个UUID是和验证码一起的，用来校验验证码
           code: this.loginForm.code,
           uuid: this.loginForm.uuid
         }
+        // 加密
         if (user.password !== this.cookiePass) {
+          console.log('加密之前的密码', user.password)
           user.password = encrypt(user.password)
+          console.log('加密之后的密码', user.password)
         }
         if (valid) {
           this.loading = true
+          // 记住我
           if (user.rememberMe) {
+            console.log('用户选择了remember，需要将数据加入cookies', user.rememberMe)
             Cookies.set('username', user.username, { expires: Config.passCookieExpires })
             Cookies.set('password', user.password, { expires: Config.passCookieExpires })
             Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
           } else {
+            console.log('用户未选择了remember，删除数据', user.rememberMe)
             Cookies.remove('username')
             Cookies.remove('password')
             Cookies.remove('rememberMe')
           }
+          // 发送登录请求
+          console.log('传递登录参数', user)
           this.$store.dispatch('Login', user).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
@@ -145,6 +157,7 @@ export default {
     },
     point() {
       const point = Cookies.get('point') !== undefined
+      console.log('当前登录的token', Cookies.get('point'))
       if (point) {
         this.$notify({
           title: '提示',

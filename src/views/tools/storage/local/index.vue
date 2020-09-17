@@ -77,6 +77,9 @@
       </el-table-column>
       <el-table-column prop="path" label="预览图">
         <template slot-scope="{row}">
+          <!--          拼接地址-->
+          <!--          baseApi: VUE_APP_BASE_API  = 'http://localhost:9017'-->
+          <!--          系统中的文件路径 file:///C:/eladmin/file/%E5%9B%BE%E7%89%87/02-20200917050809782.png-->
           <el-image
             :src=" baseApi + '/file/' + row.type + '/' + row.realName"
             :preview-src-list="[baseApi + '/file/' + row.type + '/' + row.realName]"

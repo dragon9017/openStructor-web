@@ -224,6 +224,7 @@ export default {
       setTimeout(() => {
         this.init()
       }, 2)
+    //  设置当前页每3秒自动刷新，重复请求
     }, 3500)
   },
   destroyed() {
